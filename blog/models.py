@@ -92,15 +92,21 @@ class Post(models.Model):
     def get_absolute_url(self):
         return  reverse('detail_post', kwargs={'category': self.category.slug, 'slug': self.slug})
 
+    def get_tags(self):
+        return self.tags.all()
+
+    def get_comment_count(self):
+        return self.comments.count()
+
 class Comment(models.Model):
     """Модель коментов"""
     author = models.ForeignKey(User, verbose_name='Автор', on_delete=models.CASCADE)
     text = models.TextField('Коммент')
-    post = models.ForeignKey(Post, verbose_name='Статья', on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, verbose_name='Статья', on_delete=models.CASCADE, related_name='comments')
     created_date = models.DateTimeField(auto_now_add=True)
     moderation = models.BooleanField('Moderation', default=True)
     def __str__(self):
-        return self.post
+        return self.text
 
 
     class Meta:

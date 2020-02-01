@@ -32,13 +32,14 @@ class PostDetailView(View):
             'categories': category_list,
             'post': post,
         }
-        return render(request, 'blog/post_detail.html', context)
+        return render(request, post.template, context)
 
 class CategoryView(View):
     """Вывод категории"""
     def get(self, request, category_name):
         category = Category.objects.get(slug=category_name)
         return render(request, 'blog/post_list.html', {'category': category} )
+
 class PostView(View):
     """Вывод всех постов"""
     def get(self, request):

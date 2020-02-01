@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-
+<h1>Spoat</h1>
 {% for category in categories %}
     <p><a href="{% url 'category' category.slug %}">{{ category.name }}</a></p>
 {% endfor %}
@@ -19,6 +19,7 @@
     {{ tag.name }},
 {% endfor %}
 <small>Автор: {{ post.author }} - {{ post.published_date }}</small>
+<hr>
 <h4>Комментари</h4>
 {% for comment in post.comment_set.all %}
     пользователь - {{ comment.author }} <br>
