@@ -26,23 +26,29 @@ class Category(MPTTModel):
     sort = models.PositiveIntegerField('порядок', default=0)
 
     def __str__(self):
-        return  self.name
+        return self.name
 
     class Meta:
-        verbose_name='Категория'
-        verbose_name_plural='Категории'
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
+
+    def get_absolute_url(self):
+        return reverse('category', kwargs={'category_slug': self.slug})
+
 
 class Tag(models.Model):
     """Модель тегов"""
     name = models.CharField('Название тега', max_length=100, unique=True)
     slug = models.SlugField('url', max_length=100, unique=True)
     published = models.BooleanField("отображать?", default=True)
+
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = "Тег"
         verbose_name_plural = "Теги"
+
 
 class Post(models.Model):
     """Модель постов"""
@@ -90,13 +96,17 @@ class Post(models.Model):
         verbose_name_plural = "Новости"
 
     def get_absolute_url(self):
-        return  reverse('detail_post', kwargs={'category': self.category.slug, 'slug': self.slug})
+        return reverse('detail_post', kwargs={'category': self.category.slug, 'slug': self.slug})
 
     def get_tags(self):
         return self.tags.all()
 
     def get_comment_count(self):
         return self.comments.count()
+
+    def get_category_template(self):
+        return self.category.template
+
 
 class Comment(models.Model):
     """Модель коментов"""
@@ -105,9 +115,9 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, verbose_name='Статья', on_delete=models.CASCADE, related_name='comments')
     created_date = models.DateTimeField(auto_now_add=True)
     moderation = models.BooleanField('Moderation', default=True)
+
     def __str__(self):
         return self.text
-
 
     class Meta:
         verbose_name = "Комментарий"

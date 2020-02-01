@@ -16,16 +16,18 @@
 <small>{{ post.published_date }}</small>
 <br>
 Теги - {% for tag in post.get_tags %}
-    {{ tag.name }},
+     {% if tag.published %}
+        <a href="{% url 'tag' tag.slug %}">{{ tag.name }}</a>,
+    {% endif %}
 {% endfor %}
 <small>Автор: {{ post.author }} - {{ post.published_date }}</small>
 <hr>
 <h4>Комментари</h4>
-{% for comment in post.comment_set.all %}
+{% for comment in post.comments.all %}
     пользователь - {{ comment.author }} <br>
     {{ comment.text }} <br>
     Добавлен - {{ comment.created_date }} <br>
-
+    <br>
 {% endfor %}
 
 </body>
