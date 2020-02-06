@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 
 # Create your views here.
@@ -18,7 +18,7 @@ class PostListView(View):
         return Post.objects.filter(published=True, published_date__lte=datetime.now())
 
     def get(self, request, category_slug=None, tag_slug=None):
-        category_list = Category.objects.filter(published=True)
+        # category_list = Category.objects.filter(published=True)
         if category_slug is not None:
             posts = self.get_queryset().filter(category__slug=category_slug, category__published=True)
         elif tag_slug is not None:
@@ -28,10 +28,10 @@ class PostListView(View):
         if posts.exists():
             template = posts.first().get_category_template()
         else:
-            template = 'blog/post_list.html'
-
+            # template = 'blog/post_list.html'
+            raise Http404()
         context = {
-            'categories': category_list,
+            # 'categories': category_list,
             'post_list': posts,
         }
         return render(request, template, context)
@@ -40,11 +40,11 @@ class PostListView(View):
 class PostDetailView(View):
     """Полная статья одного статьи"""
     def get(self, request, **kwargs):
-        category_list = Category.objects.filter(published=True)
+        # category_list = Category.objects.filter(published=True)
         post = get_object_or_404(Post, slug=kwargs.get('slug'))
         form = CommentForm()
         context = {
-            'categories': category_list,
+            # 'categories': category_list,
             'post': post,
             'form': form
         }
